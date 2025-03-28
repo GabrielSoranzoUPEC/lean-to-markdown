@@ -1,7 +1,10 @@
 {
   "name": "lean-to-markdown",
   "displayName": "Lean to Markdown",
-  "repository": "GabrielSoranzoUPEC/lean-to-markdown",
+  "repository": {
+		"type": "git",
+		"url": "https://github.com/GabrielSoranzoUPEC/lean-to-markdown"
+	},
   "description": "Display Lean files as Markdown",
   "dependencies": {
   "marked": "^4.0.0"
@@ -25,7 +28,15 @@
         "command": "lean-to-markdown.show_markdown2",
         "title": "Render Lean file in Markdown via integrated markdown viewer"
       }
-  ]
+    ],
+    "keybindings": [
+      {
+        "command": "lean-to-markdown.show_markdown2",
+        "key": "ctrl+shift+V",
+        "mac": "cmd+shift+V",
+        "when": "editorLangId == lean4"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",

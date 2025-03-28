@@ -4,26 +4,17 @@ This is the README for the extension "lean-to-markdown".
 
 ## Features
 
-Cette extension permets de visualiser un fichier Lean comme un Markdown. Les commentaires sont traités comme des Markdown et le code est mis dans des blocs de code.
+This extension allows you to view a Lean file as Markdown. Comments are treated as Markdown, and the code is placed in code blocks.
 
-Il y a deux commandes possibles:
-- `Render Lean file in Markdown in Webview` qui affiche en Markdown sans utiliser l'outil de visualisation intégré de VS-Code.
-- `Render Lean file in Markdown via integrated markdown viewer` qui crée un fichier markdown du même nom que le fichier Lean et l'ouvre dans l'outil intégré de VS-Code
+There are two possible commands:
+
+- `Render Lean file in Markdown in Webview`, which displays it in Markdown without using VS-Code's built-in viewer.
+
+- `Render Lean file in Markdown via the integrated Markdown viewer`, which creates a Markdown file with the name `temp.md`` and opens it in VS-Code's built-in viewer.
 
 ## Requirements
 
 No requirements
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
 
 ## Known Issues
 

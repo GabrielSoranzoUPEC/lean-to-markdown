@@ -1,0 +1,42 @@
+{
+  "name": "lean-to-markdown",
+  "displayName": "Lean to Markdown",
+  "description": "Display Lean files as Markdown",
+  "dependencies": {
+  "marked": "^4.0.0"
+  },
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "lean-to-markdown.show_markdown",
+        "title": "Render Lean file in Markdown in Webview"
+      },
+      {
+        "command": "lean-to-markdown.show_markdown2",
+        "title": "Render Lean file in Markdown via integrated markdown viewer"
+      }
+  ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.98.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "eslint": "^9.23.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}

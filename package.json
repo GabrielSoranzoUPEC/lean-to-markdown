@@ -1,6 +1,7 @@
 {
   "name": "lean-to-markdown",
   "displayName": "Lean to Markdown",
+  "repository": "GabrielSoranzoUPEC/lean-to-markdown",
   "description": "Display Lean files as Markdown",
   "dependencies": {
   "marked": "^4.0.0"

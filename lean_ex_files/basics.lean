@@ -1,10 +1,10 @@
 import Mathlib.Data.Real.Basic
 
-
--- Il faut importer la bibliothèque précédente sinon
--- l'exemple donné en introduction ne fonctionne pas
--- Essai Latex : $x^2$
-
+/-
+Il faut importer la bibliothèque précédente sinon
+l'exemple donné en introduction ne fonctionne pas
+Essai Latex : $x^2$
+-/
 
 -- 1. Introduction
 

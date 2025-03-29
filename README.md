@@ -18,11 +18,11 @@ No requirements
 
 ## Known Issues
 
-Version beta donc issues innombrables
+No issues
 
 ## Release Notes
 
-### 0.0.1
+### 0.1.0
 
 Première version beta: usage basique
 

@@ -39,8 +39,9 @@ function activate(context) {
 
 	  const disposable2 = vscode.commands.registerCommand('lean-to-markdown.show_markdown2', () => {
 		// Create and show panel
-
 		const editor = vscode.window.activeTextEditor;
+
+
 		if (!editor) {
 			vscode.window.showErrorMessage('Aucun fichier Lean ouvert.');
 			return;
@@ -55,12 +56,18 @@ function activate(context) {
 			return;
 		}
 	
-		const tempFilePath = vscode.Uri.joinPath(workspaceFolders[0].uri, 'temp.md');
+		const path = require('path');
+		const filePath = editor.document.fileName;
+		// Récupère le nom du fichier sans extension
+		const fileNameWithoutExt = path.basename(filePath, path.extname(filePath)); // "monfichier"
+		// Concatène le nouveau suffixe
+		const newFileName = fileNameWithoutExt + '.md'; // "monfichier.md"
+		const tempFilePath = vscode.Uri.joinPath(workspaceFolders[0].uri, 'md_temp', newFileName);
 	
-		// Écrire le contenu dans temp.md
+		// Écrire le contenu dans le fichier.md
 		try {
 			vscode.workspace.fs.writeFile(tempFilePath, Buffer.from(markdownContent, 'utf8'));
-			vscode.window.showInformationMessage('Fichier temp.md mis à jour.');
+			vscode.window.showInformationMessage('Fichier '+newFileName+' mis à jour.');
 
 
 			// Ouvrir le fichier dans l'éditeur
@@ -80,60 +87,73 @@ function activate(context) {
 }
 
 
-function convertLeanToMarkdown(content) {
-	// Exemple basique : séparez commentaires et code
+function convertLeanToMarkdown2(content) {
 	const lines = content.split('\n');
 	let md = '';
+	let commentBlock = '';
+	let codeBlock = '';
+	let state= '';
+
 	for (const line of lines) {
-	  if (line.trim().startsWith('--')) {
-		// Traiter le commentaire (peut contenir du Markdown)
-		md += line.replace('--', '') + '\n\n';
-	  } else {
-		// Encapsuler le code dans un bloc
-		md += '```lean\n' + line + '\n```\n\n';
-	  }
-	}
-	return md;
-  }
-
-  function convertLeanToMarkdown2(content) {
-    const lines = content.split('\n');
-    let md = '';
-    let commentBlock = '';
-    let codeBlock = '';
-    let inCodeBlock = false;
-
-    for (const line of lines) {
-        if (line.trim().startsWith('--')) {
-			// Si un bloc de code était en cours, l'ajouter au Markdown
-			if (inCodeBlock){
-				md +=  '```lean\n' + codeBlock.trim() + '\n```\n\n';
-				inCodeBlock=false;
+		if (line.trim().startsWith('--')) {
+			if (state=='codeBlock'){
+				md += '```lean\n' + codeBlock.trim() + '\n```\n';
+				codeBlock='';
+				state='';
 			}
-            // Ajouter au bloc de commentaires
-            commentBlock += line.replace(/^--\s?/, '') + '\n';
-        } else {
-            // Si un bloc de commentaires était en cours, l'ajouter au Markdown
-            if (commentBlock) {
-                md += commentBlock.trim() + '\n\n';
-                commentBlock = '';
-            }
-            
-            // Ajouter au bloc de code
-            if (line.trim()) { // Éviter les lignes vides dans le code
-                codeBlock += line + '\n';
-                inCodeBlock = true;
-            }
-        }
-    }
+			md += line.replace(/^--\s?/, '') + '\n\n';
+		}
+		else if(line.trim()=='/-'){
+			if(state=='codeBlock'){
+				md += '```lean\n' + codeBlock.trim() + '\n```\n';
+				codeBlock='';
+				state='';				
+			}
+			state='commentBlock';
+		} 
+		else if(line.trim().startsWith('/-')){
+			if(state=='codeBlock'){
+				md += '```lean\n' + codeBlock.trim() + '\n```\n';
+				codeBlock='';
+				state='';				
+			}
+			state='commentBlock';
+			commentBlock += line.trim().slice(2).replace(/^--\s?/, '') + '\n';		
+		}
+		else if(line.trim()=='-/'){
+			md += commentBlock+'\n';
+			state='';
+			commentBlock='';			
+		}
+		else if(line.trim().slice(-2)=='-/'){
+			commentBlock += line.trim().slice(0,-2).replace(/^--\s?/, '') + '\n';
+			md += commentBlock+'\n';
+			state='';
+			commentBlock='';
+		}
+		else if(state=='codeBlock'){
+			codeBlock += line + '\n';
+		}
+		else if(state=='commentBlock'){
+			commentBlock += line.replace(/^--\s?/, '') + '\n';
+		}
+		else{
+			if(line.trim()!=''){
+				state='codeBlock';
+				codeBlock += line + '\n';
+			}
+		}
+	}
+	// Ajouter le dernier bloc de code s'il existe
+	if (state=='codeBlock') {
+		md += '```lean\n' + codeBlock.trim() + '\n```\n';
+	}
+	else if(state=='commentBlock'){
+		md += commentBlock+'\n';
+	}
 
-    // Ajouter le dernier bloc de code s'il existe
-    if (codeBlock) {
-        md += '```lean\n' + codeBlock.trim() + '\n```';
-    }
-
-    return md.trim();
-  }
+	return md.trim();
+}
   
   function getWebviewContent(mdContent) {
 	return `<!DOCTYPE html>
